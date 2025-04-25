@@ -20,7 +20,7 @@ class PostsResource extends JsonResource
                 'full_name' => $this->user->name,
                 'image' => MyApp::main()->fileProcess->getFullLink($this->user->image),
             ],
-            'count_comments' => $this->count_comments ?? 0,
+            'comments_count' => $this->comments_count ?? 0,
             'image' => MyApp::main()->fileProcess->getFullLink($this->image),
             'created_at' => $this->created_at,
         ];

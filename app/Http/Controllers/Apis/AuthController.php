@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Apis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserProfileResource;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -12,11 +14,11 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        if (!auth()->attempt($credentials)) {
+        $user = User::query()->where('email',$credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'],$user->password)) {
             return $this->responseError("Incorrect email address or password", 401);
         }
-
-        $user = auth()->user();
 
         $token = $user->createToken($user->name,["*"])->plainTextToken;
 

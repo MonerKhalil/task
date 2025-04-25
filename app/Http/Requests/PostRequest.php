@@ -15,8 +15,8 @@ class PostRequest extends BaseRequest
     {
         $id = $this->route("id");
         return [
-            "title" => ["require","string","max:255"],
-            "content" => ["require","string"],
+            "title" => ["required","string","max:255"],
+            "content" => ["required","string"],
             "image" => MyApp::main()->crudProcess->ruleImage(is_null($id)),
         ];
     }

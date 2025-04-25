@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 class Authenticate extends Middleware
 {
     public function handle($request, Closure $next, ...$guards){
-        $response = parent::handle($request, $next, $guards);
+        $this->authenticate($request, $guards);
         #set all permissions...
         MyApp::main()->permissionsProcess->setPermissionsUserAuth();
-        return $response;
+        return $next($request);
     }
 
     /**
