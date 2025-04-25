@@ -1,19 +1,22 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Helpers\MyApp;
+use App\Http\Controllers\Apis\AuthController;
+use App\Http\Controllers\Apis\PostController;
+use App\Http\Controllers\Apis\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::prefix("v1")->group(function (){
+    Route::middleware(["guest:api"])->post("auth/login",[AuthController::class,"login"]);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::middleware(["auth:api"])->group(function (){
+        Route::delete("auth/logout",[AuthController::class,"logout"]);
+        MyApp::main()->crudProcess->routesCrud("users", UserController::class);
+        MyApp::main()->crudProcess->routesCrud("posts", PostController::class);
+        Route::get("show/my/posts",[PostController::class,"showMyPosts"]);
+        Route::prefix("posts/post/{post_id}")->controller(PostController::class)->group(function (){
+            Route::delete("delete","destroyPost");
+            Route::post("add/comment","addComment");
+        });
+    });
 });
