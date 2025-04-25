@@ -34,7 +34,7 @@ class SendPostCreatedNotification implements ShouldQueue
             ->whereNot("id",$user_id)
             ->where("role",PermissionsProcess::ROLE_ADMIN)
             ->get()
-            ->pluck("emails")
+            ->pluck("email")
             ->toArray();
         foreach ($emails as $email){
             Mail::to($email)->send(new PostCreatedMail($this->post));
